@@ -1,13 +1,13 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes import get_apps_router
 from config.database.db_helper import lifespan
+from router import router as tasks_router
 
 
 def get_application() -> FastAPI:
     application = FastAPI(title="TodoTasks", lifespan=lifespan)
-    application.include_router(get_apps_router())
+    application.include_router(tasks_router)
     application.add_middleware(
         CORSMiddleware,
         allow_origins=[],

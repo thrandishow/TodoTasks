@@ -1,8 +1,8 @@
 from typing import Sequence
 from sqlalchemy import select
 from config.database.db_helper import new_session
-from src.models.task_model import TaskOrm
-from src.schemas.task_schema import Task, TaskAdd
+from models.task_model import TaskOrm
+from schemas.schema import TaskAdd
 
 
 class TaskRepository:
