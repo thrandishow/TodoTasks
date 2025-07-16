@@ -1,0 +1,19 @@
+[project]
+name = "todotasks"
+version = "0.1.0"
+description = "TodoList FastAPI application"
+authors = [
+    {name = "klim",email = "thrandi230807@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi (>=0.116.1,<0.117.0)",
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "uvicorn (>=0.35.0,<0.36.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
