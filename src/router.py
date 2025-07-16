@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from repositories.repository import TaskRepository
 from schemas.schema import TaskAdd
 
-router = APIRouter(prefix="/tasks", tags="Tasks")
+router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 
 @router.get("")
