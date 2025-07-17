@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase
 from contextlib import asynccontextmanager
+from typing import Annotated, Any, AsyncGenerator
+from fastapi import Depends, FastAPI
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.orm import DeclarativeBase
 
-engine = create_async_engine("sqlite+aiosqlite:///tasks.db")
+engine = create_async_engine("sqlite+aiosqlite:///tasks.db", echo=True)
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
@@ -21,11 +22,29 @@ async def delete_tables():
         await conn.run_sync(Base.metadata.drop_all)
 
 
+async def get_db():
+    db = new_session()
+    try:
+        yield db
+    finally:
+        await db.close()
+
+
+async def init_models() -> None:
+    """Create tables if they don't already exist.
+
+    In a real-life example we would use Alembic to manage migrations.
+    """
+    async with engine.begin() as conn:
+        # await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    await delete_tables()
-    print("База очищена")
-    await create_tables()
-    print("База готова к работе")
+async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
+    """Run tasks before and after the server starts."""
+    await init_models()
     yield
-    print("Выключение")
+
+
+db_dependency = Annotated[AsyncSession, Depends(get_db)]
