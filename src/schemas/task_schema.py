@@ -1,4 +1,5 @@
 from typing import Optional
+from fastapi import status
 from pydantic import BaseModel, ConfigDict
 
 
@@ -14,10 +15,8 @@ class Task(TaskAdd):
 
 
 class TaskId(BaseModel):
-    status_code: int
     id: int
 
 
 class TaskListResponse(BaseModel):
     data: list[Task]
-    status_code: int = 200
