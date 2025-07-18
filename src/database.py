@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
-engine = create_async_engine("sqlite+aiosqlite:///tasks.db", echo=True)
+engine = create_async_engine("sqlite+aiosqlite:///todotasks.db", echo=False)
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
