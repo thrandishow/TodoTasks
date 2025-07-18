@@ -1,12 +1,12 @@
 from sqlalchemy import select
-from src.database import new_session
+from src.database import new_session, db_dependency
 from ..models.task_model import TaskOrm
 from ..schemas.task_schema import Task, TaskAdd
 
 
 class TaskRepository:
     @classmethod
-    async def add_one(cls, data: TaskAdd) -> int:
+    async def add_one(cls, data: TaskAdd, db: db_dependency) -> int:
         async with new_session() as session:
             task_dict = data.model_dump()
 
@@ -18,7 +18,7 @@ class TaskRepository:
             return task.id
 
     @classmethod
-    async def find_all(cls) -> list[Task]:
+    async def find_all(cls, db: db_dependency) -> list[Task]:
         async with new_session() as session:
             query = select(TaskOrm)
             result = await session.execute(query)

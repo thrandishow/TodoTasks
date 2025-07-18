@@ -1,18 +1,22 @@
-from src.database import new_session, db_dependency
-from src.schemas.auth_schema import CreateUserRequest
+from src.database import new_session
+from src.schemas.auth_schema import RegisterSchema
 from src.models.user_model import UserOrm
 from src.auth.auth_settings import bcrypt_context
+from src.database import db_dependency
 
 
 class UserRepository:
     @classmethod
     async def create_user(
-        cls, db: db_dependency, create_user_request: CreateUserRequest
+        cls,
+        register_user_request: RegisterSchema,
+        db: db_dependency,
     ):
         async with new_session() as session:
-            create_user_model = UserOrm(
-                username=create_user_request.username,
-                password=bcrypt_context.hash(create_user_request.password),
+            user_model = UserOrm(
+                username=register_user_request.username,
+                email=register_user_request.email,
+                password=bcrypt_context.hash(register_user_request.password),
             )
-            session.add(create_user_model)
+            session.add(user_model)
             await session.commit()
