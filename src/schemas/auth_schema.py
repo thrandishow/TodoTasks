@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pydantic import BaseModel
 
 
@@ -12,10 +13,10 @@ class RegisterResponseSchema(BaseModel):
 
 
 class LoginSchema(BaseModel):
-    email: str
+    username: str
     password: str
 
 
-class Token(BaseModel):
+class TokenSchema(BaseModel):
     access_token: str
     token_type: str

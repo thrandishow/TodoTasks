@@ -1,5 +1,4 @@
 from typing import Optional
-from fastapi import status
 from pydantic import BaseModel, ConfigDict
 
 
