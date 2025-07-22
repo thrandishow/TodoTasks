@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from src.database import new_session, db_dependency
-from ..models.task_model import TaskOrm
-from ..schemas.task_schema import Task, TaskAdd
+from src.models.task_model import TaskOrm
+from src.schemas.task_schema import Task, TaskAdd
 
 
 class TaskRepository:
@@ -27,3 +27,14 @@ class TaskRepository:
                 Task.model_validate(task_model) for task_model in task_models
             ]
             return task_schemas
+
+    @classmethod
+    async def remove_task_by_id(cls,task_id: int, db: db_dependency) -> None:
+        async with new_session() as session:
+            query = select(TaskOrm).where(TaskOrm.id==task_id)
+            result = await session.execute(query)
+            task = result.scalar_one_or_none()
+            if result is None:
+                return None
+            session.delete(task)
+            await session.commit()

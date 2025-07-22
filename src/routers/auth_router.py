@@ -42,3 +42,4 @@ async def login_for_access_token(form_data: annotation_oauth2, db: db_dependency
         user.username, user.id, timedelta(minutes=20)
     )
     return {"access_token": token, "token_type": "bearer"}
+
