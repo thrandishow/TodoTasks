@@ -1,10 +1,12 @@
 from datetime import timedelta
 from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
+
+from src.auth.auth_settings import annotation_oauth2
+from src.database import db_dependency
 from src.repositories.user_repository import UserRepository
 from src.schemas.auth_schema import RegisterSchema, RegisterResponseSchema, TokenSchema
-from src.database import db_dependency
-from src.auth.auth_settings import annotation_oauth2
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -22,7 +24,7 @@ async def get_user(user: user_dependency, db: db_dependency):
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(
-    register_data: RegisterSchema, db: db_dependency
+        register_data: RegisterSchema, db: db_dependency
 ) -> RegisterResponseSchema:
     await UserRepository.create_user(register_data, db)
     return {"message": "Successful user registration"}
@@ -42,4 +44,3 @@ async def login_for_access_token(form_data: annotation_oauth2, db: db_dependency
         user.username, user.id, timedelta(minutes=20)
     )
     return {"access_token": token, "token_type": "bearer"}
-

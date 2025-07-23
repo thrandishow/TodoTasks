@@ -3,15 +3,16 @@ from datetime import datetime, timedelta
 import jwt
 from fastapi import HTTPException, status
 from sqlalchemy import select
-from src.database import new_session
-from src.schemas.auth_schema import RegisterSchema
-from src.models.user_model import UserOrm
+
 from src.auth.auth_settings import (
     bcrypt_context,
     token_annotation,
 )
-from src.database import db_dependency
 from src.auth.config import ALGORITHM, SECRET_KEY
+from src.database import db_dependency
+from src.database import new_session
+from src.models.user_model import UserOrm
+from src.schemas.auth_schema import RegisterSchema
 
 
 class UserRepository:

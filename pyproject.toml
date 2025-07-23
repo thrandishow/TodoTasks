@@ -6,7 +6,7 @@ authors = [
     {name = "klim",email = "thrandi230807@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
     "fastapi (>=0.116.1,<0.117.0)",
     "sqlalchemy (>=2.0.41,<3.0.0)",
@@ -16,7 +16,7 @@ dependencies = [
     "passlib[bcrypt] (>=1.7.4,<2.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
     "pyjwt (>=2.10.1,<3.0.0)",
-    "alembic (>=1.16.4,<2.0.0)"
+    "alembic (>=1.16.4,<2.0.0)",
 ]
 
 

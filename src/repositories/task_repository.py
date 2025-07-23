@@ -1,4 +1,5 @@
 from sqlalchemy import select
+
 from src.database import new_session, db_dependency
 from src.models.task_model import TaskOrm
 from src.schemas.task_schema import Task, TaskAdd, TaskPutRequest
@@ -29,9 +30,9 @@ class TaskRepository:
             return task_schemas
 
     @classmethod
-    async def remove_task_by_id(cls,task_id: int, db: db_dependency) -> None:
+    async def remove_task_by_id(cls, task_id: int, db: db_dependency) -> None:
         async with new_session() as session:
-            query = select(TaskOrm).where(TaskOrm.id==task_id)
+            query = select(TaskOrm).where(TaskOrm.id == task_id)
             result = await session.execute(query)
             task = result.scalar_one_or_none()
             if result is None:
@@ -40,7 +41,7 @@ class TaskRepository:
             await session.commit()
 
     @classmethod
-    async def change_task_by_id(cls,task_id: int,data_for_change: TaskPutRequest,db: db_dependency) -> None | Task:
+    async def change_task_by_id(cls, task_id: int, data_for_change: TaskPutRequest, db: db_dependency) -> None | Task:
         async with new_session() as session:
             query = select(TaskOrm).where(TaskOrm.id == task_id)
             result = await session.execute(query)
@@ -52,12 +53,3 @@ class TaskRepository:
             await session.flush()
             await session.commit()
             return Task.model_validate(task).model_dump()
-
-
-
-
-
-
-
-
-
