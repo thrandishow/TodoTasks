@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from src.database import new_session, db_dependency
 from src.models.task_model import TaskOrm
-from src.schemas.task_schema import Task, TaskAdd
+from src.schemas.task_schema import Task, TaskAdd, TaskPutRequest
 
 
 class TaskRepository:
@@ -38,3 +38,26 @@ class TaskRepository:
                 return None
             session.delete(task)
             await session.commit()
+
+    @classmethod
+    async def change_task_by_id(cls,task_id: int,data_for_change: TaskPutRequest,db: db_dependency) -> None | Task:
+        async with new_session() as session:
+            query = select(TaskOrm).where(TaskOrm.id == task_id)
+            result = await session.execute(query)
+            task = result.scalar_one_or_none()
+            if result is None:
+                return None
+            task.name = data_for_change.name
+            task.description = data_for_change.description
+            await session.flush()
+            await session.commit()
+            return Task.model_validate(task).model_dump()
+
+
+
+
+
+
+
+
+

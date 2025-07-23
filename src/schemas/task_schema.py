@@ -12,3 +12,7 @@ class Task(TaskAdd):
 
 class TaskListResponse(BaseModel):
     data: list[Task]
+
+class TaskPutRequest(BaseModel):
+    name: str
+    description: str
