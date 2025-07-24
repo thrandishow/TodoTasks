@@ -7,15 +7,6 @@ class RegisterSchema(BaseModel):
     password: str
 
 
-class RegisterResponseSchema(BaseModel):
-    message: str
-
-
-class LoginSchema(BaseModel):
-    username: str
-    password: str
-
-
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str

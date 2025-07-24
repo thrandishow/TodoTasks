@@ -1,5 +1,7 @@
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from src.models.token_model import RefreshTokenOrm
 
 
 class UserOrm(Base):
@@ -8,3 +10,4 @@ class UserOrm(Base):
     username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
+    token: Mapped["RefreshTokenOrm"] = relationship("RefreshTokenOrm", back_populates="user")

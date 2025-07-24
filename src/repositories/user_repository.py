@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 import jwt
 from fastapi import HTTPException, status
 from sqlalchemy import select
@@ -41,20 +39,9 @@ class UserRepository:
             return user
 
     @classmethod
-    async def create_access_token(cls, username, user_id, expires_delta: timedelta):
-        encode = {"sub": username, "id": user_id}
-        expires = datetime.utcnow() + expires_delta
-        encode.update({"exp": expires})
-        if not SECRET_KEY:
-            raise ValueError("Missing SECRET_KEY in environment variables")
-        return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
-
-    @classmethod
-    async def get_current_user(cls, token: token_annotation):
+    async def get_current_user(cls, access_token: token_annotation):
         try:
-            if not SECRET_KEY:
-                raise ValueError("Missing SECRET_KEY in environment variables")
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
             username: str = payload.get("sub")
             user_id: str = payload.get("id")
             if username is None or user_id is None:
@@ -65,5 +52,5 @@ class UserRepository:
             return {"username": username, "id": user_id}
         except jwt.ExpiredSignatureError:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not valide user"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user"
             )

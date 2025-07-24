@@ -13,10 +13,6 @@ class Task(TaskAdd):
     model_config = ConfigDict(from_attributes=True)
 
 
-class TaskListResponse(BaseModel):
-    data: list[Task]
-
-
 class TaskPutRequest(BaseModel):
     name: str
     description: str

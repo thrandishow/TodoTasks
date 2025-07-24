@@ -1,12 +1,15 @@
 from contextlib import asynccontextmanager
 from typing import Annotated, Any, AsyncGenerator
+
 from fastapi import Depends, FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
+
 from src.core.db_settings import Setting
 
 engine = create_async_engine(Setting.db_url, echo=False)
 new_session = async_sessionmaker(engine, expire_on_commit=False)
+
 
 class Base(DeclarativeBase):
     pass
