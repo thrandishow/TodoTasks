@@ -29,6 +29,9 @@ async def get_db():
     db = new_session()
     try:
         yield db
+    except Exception:
+        await db.rollback()
+        raise
     finally:
         await db.close()
 

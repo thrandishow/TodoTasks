@@ -5,6 +5,7 @@ from src.database import lifespan
 from .routers.auth_router import router as auth_router
 from .routers.task_router import router as tasks_router
 
+
 app = FastAPI(title="TodoTasks", lifespan=lifespan)
 
 app.include_router(tasks_router)

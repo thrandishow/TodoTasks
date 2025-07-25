@@ -4,10 +4,10 @@ from datetime import timedelta, datetime
 import jwt
 from fastapi import HTTPException, status
 from sqlalchemy import select, delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.auth_settings import token_annotation
 from src.auth.config import SECRET_KEY, ALGORITHM
-from src.database import db_dependency, new_session
 from src.models.token_model import RefreshTokenOrm
 
 
@@ -39,24 +39,21 @@ class TokenRepository:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
     @classmethod
-    async def store_refresh_token(cls, user_id: int, jti: str, expires_at: datetime, db: db_dependency):
-        async with new_session() as session:
-            refresh_token = RefreshTokenOrm(
-                user_id=user_id, jti=jti, expires_at=expires_at
-            )
-            session.add(refresh_token)
-            await session.commit()
+    async def store_refresh_token(cls, user_id: int, jti: str, expires_at: datetime, db: AsyncSession):
+        refresh_token = RefreshTokenOrm(
+            user_id=user_id, jti=jti, expires_at=expires_at
+        )
+        db.add(refresh_token)
+        await db.commit()
 
     @classmethod
-    async def get_refresh_token(cls, user_id: int, jti: str, db: db_dependency):
-        async with new_session() as session:
-            query = select(RefreshTokenOrm).where(RefreshTokenOrm.jti == jti, RefreshTokenOrm.user_id == user_id)
-            result = await session.execute(query)
-            return result.scalars().first()
+    async def get_refresh_token(cls, user_id: int, jti: str, db: AsyncSession):
+        query = select(RefreshTokenOrm).where(RefreshTokenOrm.jti == jti, RefreshTokenOrm.user_id == user_id)
+        result = await db.execute(query)
+        return result.scalars().first()
 
     @classmethod
-    async def delete_refresh_token(cls, jti: str, db: db_dependency):
-        async with new_session() as session:
-            query = delete(RefreshTokenOrm).where(RefreshTokenOrm.jti == jti)
-            await session.execute(query)
-            await session.commit()
+    async def delete_refresh_token(cls, jti: str, db: AsyncSession):
+        query = delete(RefreshTokenOrm).where(RefreshTokenOrm.jti == jti)
+        await db.execute(query)
+        await db.commit()

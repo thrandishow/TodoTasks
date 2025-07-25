@@ -15,7 +15,7 @@ user_dependency = Annotated[dict, Depends(UserRepository.get_current_user)]
 
 
 @router.get("/user", status_code=status.HTTP_200_OK)
-async def get_user(user: user_dependency, db: db_dependency):
+async def get_user(user: user_dependency):
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
