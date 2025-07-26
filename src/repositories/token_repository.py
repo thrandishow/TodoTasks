@@ -48,7 +48,9 @@ class RefreshTokenRepository(AbstractRepository):
             await session.execute(query)
             await session.commit()
 
+
 class AccessTokenRepository(AbstractRepository):
+    """Methods for work with access token."""
     model = None
 
     @staticmethod
@@ -62,7 +64,7 @@ class AccessTokenRepository(AbstractRepository):
             expires_delta (timedelta): The time when token is expired
 
         Returns:
-            Bearer token (JWT)
+            Bearer token (JWT).
         """
         expires = datetime.utcnow() + expires_delta
         encode = {"sub": username, "id": user_id, "exp": expires}
