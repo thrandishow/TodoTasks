@@ -1,51 +1,88 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, update
 
+from src.db.database import session_manager
 from src.models.task_model import TaskOrm
 from src.schemas.task_schema import Task, TaskAdd, TaskPutRequest
+from src.utils.repository import AbstractRepository
 
 
-class TaskRepository:
+class TaskRepository(AbstractRepository):
+    """Methods for work with Tasks"""
+    model = TaskOrm
 
-    @classmethod
-    async def add_one(cls, data: TaskAdd, db: AsyncSession) -> int:
-        task_dict = data.model_dump()
+    async def add_one_task(self, data: TaskAdd) -> int:
+        """
+        Add one task to database.
 
-        task = TaskOrm(**task_dict)
-        db.add(task)
-        await db.flush()
-        await db.commit()
+        Args:
+            data (TaskAdd): Contains data task for adding in database
+
+        Returns:
+            Task id that was given to it, if operation was successful.
+        """
+        async with session_manager() as session:
+            task_dict = data.model_dump()
+
+            task = self.model(**task_dict)
+            session.add(task)
+            await session.flush()
+            await session.commit()
 
         return task.id
 
-    @classmethod
-    async def find_all(cls, db: AsyncSession) -> list[Task]:
-        query = select(TaskOrm)
-        result = await db.execute(query)
-        task_models = result.scalars().all()
-        task_schemas = [
-            Task.model_validate(task_model) for task_model in task_models
-        ]
-        return task_schemas
 
-    @classmethod
-    async def remove_task_by_id(cls, task_id: int, db: AsyncSession) -> bool:
-        task = await db.get(TaskOrm, task_id)
-        if task is None:
-            return False
-        await db.delete(task)
-        await db.commit()
-        return True
+    async def find_all(self) -> list[Task]:
+        """
+        Returns all tasks in database.
 
-    @classmethod
-    async def change_task_by_id(cls, task_id: int, data_for_change: TaskPutRequest, db: AsyncSession) -> None | Task:
-            query = select(TaskOrm).where(TaskOrm.id == task_id)
-            result = await db.execute(query)
-            task = result.scalar_one_or_none()
-            if result is None:
+        Returns:
+            List of all tasks in database.
+        TODO: Make tasks only for authenticated users
+        """
+        async with session_manager() as session:
+            query = select(self.model)
+            result = await session.execute(query)
+            task_models = result.scalars().all()
+            task_schemas = [
+                Task.model_validate(task_model) for task_model in task_models
+            ]
+            return task_schemas
+
+
+    async def remove_task_by_id(self, task_id: int) -> bool:
+        """
+        Removes task by id, if it exists.
+
+        Args:
+            task_id (int): ID of task
+
+        Returns:
+            True if operation successful, False if task not found.
+        """
+        async with session_manager() as session:
+            task = await session.get(self.model, task_id)
+            if task is None:
+                return False
+            await session.delete(task)
+            await session.commit()
+            return True
+
+
+    async def change_task_by_id(self, data_for_change: TaskPutRequest) -> None | Task:
+        """
+        Changes all data of task in database.
+
+        Args:
+            data_for_change: Data for changing name and description of task
+
+        Returns:
+            Changed task if task was found and changed, else None.
+        """
+        async with session_manager() as session:
+            task = await session.get(self.model, data_for_change.task_id)
+            if task is None:
                 return None
-            task.name = data_for_change.name
-            task.description = data_for_change.description
-            await db.flush()
-            await db.commit()
+            update(task).values(**data_for_change)
+            await session.flush()
+            await session.commit()
             return Task.model_validate(task).model_dump()

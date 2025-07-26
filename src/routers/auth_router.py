@@ -4,8 +4,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 
 from src.auth.auth_settings import annotation_oauth2, token_annotation
-from src.database import db_dependency
-from src.repositories.token_repository import TokenRepository
+from src.db.database import db_dependency
+from src.repositories.token_repository import RefreshTokenRepository, AccessTokenRepository
 from src.repositories.user_repository import UserRepository
 from src.schemas.auth_schema import RegisterSchema, TokenSchema
 
@@ -25,16 +25,16 @@ async def get_user(user: user_dependency):
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(
-        register_data: RegisterSchema, db: db_dependency
+        register_data: RegisterSchema
 ) -> Response:
-    await UserRepository.create_user(register_data, db)
+    await UserRepository().create_user(register_request=register_data)
     return Response(content="User created")
 
 
 @router.post("/token", response_model=TokenSchema)
-async def login_for_tokens(form_data: annotation_oauth2, db: db_dependency, response: Response = None):
-    user = await UserRepository.authenticate_user(
-        form_data.username, form_data.password, db
+async def login_for_tokens(form_data: annotation_oauth2,  response: Response = None):
+    user = await UserRepository().authenticate_user(
+        form_data.username, form_data.password
     )
     if not user:
         raise HTTPException(
@@ -43,12 +43,12 @@ async def login_for_tokens(form_data: annotation_oauth2, db: db_dependency, resp
         )
     access_token_expires = timedelta(minutes=20)
     refresh_token_expires = timedelta(days=60)
-    access_token = await TokenRepository.create_access_token(
+    access_token = await AccessTokenRepository.create_access_token(
         user.username, user.id, access_token_expires
     )
-    refresh_token, jti = await TokenRepository.create_refresh_token(user.id, refresh_token_expires)
+    refresh_token, jti = await RefreshTokenRepository().create_refresh_token(user.id, refresh_token_expires)
     expires_at = datetime.utcnow() + refresh_token_expires
-    await TokenRepository.store_refresh_token(user.id, jti, expires_at, db)
+    await RefreshTokenRepository.store_refresh_token(user.id, jti, expires_at)
 
     response.set_cookie(
         key="refresh_token",

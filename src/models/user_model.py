@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database import Base
+from src.db.database import Base
 
 
 class UserOrm(Base):
@@ -9,4 +9,4 @@ class UserOrm(Base):
     username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
-    refresh_token = relationship("RefreshTokenOrm",backref="user",uselist=False)
+    refresh_token = relationship("RefreshTokenOrm",backref="user", uselist=False)

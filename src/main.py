@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.database import lifespan
+from src.db.database import lifespan
 from .routers.auth_router import router as auth_router
 from .routers.task_router import router as tasks_router
-
 
 app = FastAPI(title="TodoTasks", lifespan=lifespan)
 

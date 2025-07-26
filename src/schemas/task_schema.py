@@ -14,5 +14,6 @@ class Task(TaskAdd):
 
 
 class TaskPutRequest(BaseModel):
+    task_id: int
     name: str
     description: str

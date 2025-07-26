@@ -1,6 +1,6 @@
 # 📝 ✅ TodoTasks 🌿
 
-**TodoTasks** is a modern, lightweight, and asynchronous task management API built with 🌱 **FastAPI**. It features **JWT-based authentication** 🔐, an **async database** for smooth performance ⚡, and is designed to help you manage your to-dos with simplicity and speed.  
+**TodoTasks** is a modern, lightweight, and asynchronous task management API built with 🌱 **FastAPI**. It features **JWT-based authentication** 🔐, an **async database** for smooth performance ⚡, and is designed to help you manage your to-dos with simplicity and speed.
 
 [![Python Version](https://img.shields.io/badge/Python-3.12-green)](https://www.python.org/)  
 [![Build Status](https://img.shields.io/badge/Build-v0.1.0-green)](https://github.com/yourusername/TodoTasks/actions)  
@@ -11,29 +11,22 @@
 ## 🌟 Features
 
 ✅ **JWT Authentication**  
-Secure API endpoints using JSON Web Tokens (JWT).  
+Secure API endpoints using JSON Web Tokens (JWT).
 
 ✅ **Asynchronous Database**  
-Leveraging async ORM for high performance and scalability.  
+Leveraging async ORM for high performance and scalability.
 
 ✅ **FastAPI Framework**  
-Enjoy the blazing speed and intuitive design of FastAPI.  
+Enjoy the blazing speed and intuitive design of FastAPI.
 
 ✅ **CRUD for Tasks**  
-Create, Read, Update, Delete your tasks effortlessly.  
+Create, Read, Update, Delete your tasks effortlessly.
 
 ✅ **Modern API Design**  
-OpenAPI/Swagger docs auto-generated for easy testing.  
+OpenAPI/Swagger docs auto-generated for easy testing.
 
 ✅ **Poetry**
-Poetry used for dependencies. 🌱
----
-
-## 🖥️ Screenshots
-
-| 🗂️ Task List View | 🔐 Authentication |
-|--------------------|---------------------|
-| ![Task List](https://your-image-link-here.com/tasks.png) | ![Auth](https://your-image-link-here.com/auth.png) |
+used for dependencies. 🌱
 
 ---
 
@@ -42,25 +35,28 @@ Poetry used for dependencies. 🌱
 🌿 **Backend:** [FastAPI](https://fastapi.tiangolo.com/)  
 🔋 **Authentication:** JWT Tokens  
 ⚡ **Database:** Async DB (e.g., SQLAlchemy + Databases or Tortoise ORM)  
-📄 **Documentation:** Auto-generated Swagger UI  
+📄 **Documentation:** Auto-generated Swagger UI
 
 ---
 
 ## 🛠️ Installation
 
 1. **Clone the repo**
+
    ```bash
    git clone https://github.com/thrandishow/TodoTasks.git
    cd TodoTasks
    ```
 
 2. **Create a virtual environment**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install poetry
    poetry install --no-root
@@ -77,10 +73,10 @@ Poetry used for dependencies. 🌱
 
 ## 📖 API Documentation
 
-Interactive API docs available at:  
+Interactive API docs available at:
 
 🔗 [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI)  
-🔗 [http://localhost:8000/redoc](http://localhost:8000/redoc) (ReDoc)  
+🔗 [http://localhost:8000/redoc](http://localhost:8000/redoc) (ReDoc)
 
 ---
 
@@ -117,7 +113,7 @@ TodoTasks/
 
 ## ✨ Contribution
 
-Contributions are welcome! 🌿 Please fork the repo and submit a pull request.  
+Contributions are welcome! 🌿 Please fork the repo and submit a pull request.
 
 ---
 
